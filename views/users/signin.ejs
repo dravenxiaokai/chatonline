@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+</head>
+<body>
+    <form name="signinForm" action="/users/signin" method="post" class="form" >
+        <input type="text" name="subflag" value="1" style="display: none;" >
+        <input type="email" name="email" class="form-control" >
+        <input type="password" name="pwd" id="pwd" class="form-control" >
+        <button type="submit" class="btn btn-success">登录</button>
+        <button type="reset" class="btn btn-success">重置</button>
+    </form>
+</body>
+</html>
