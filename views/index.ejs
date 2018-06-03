@@ -3,7 +3,7 @@
   <head>
     <title><%= title %></title>
     <!--<link rel='stylesheet' href='/stylesheets/style.css' />-->
-    <link rel='stylesheet' href='/javascripts/bootstrap/dist/css/bootstrap.min.css' />
+    <%- include ./common/head %>
   </head>
   <body>
   <div class="panel panel-primary">
@@ -12,7 +12,6 @@
     </div>
     <p class="panel-body">Welcome to <%= title %></p>
   </div>
-    <script src="/javascripts/jquery/dist/jquery.min.js"></script>
-    <script src="/javascripts/bootstrap/dist/js/bootstrap.min.js"></script>
+    <%- include ./common/foot %>
   </body>
 </html>
