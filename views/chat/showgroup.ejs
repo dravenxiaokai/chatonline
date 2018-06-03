@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>群聊界面</title>
+    <%- include ../common/head%>
+    <style>
+        a:hover{text-decoration:none;}
+    </style>
+    <%- include ../common/foot%>
+    <script type="text/javascript" src="/javascripts/xheditor/xheditor-1.2.2.min.js"></script>
+    <script type="text/javascript" src="/javascripts/xheditor/xheditor_lang/zh-cn.js"></script>
+    <script type="text/javascript">
+    $(pageInit);
+    function pageInit(){
+        $.extend(XHEDITOR.settings,{shortcuts:{'ctrl+enter':submitForm}});
+        $('#content').xheditor({html5Upload:false,upMultiple:'1',upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"/uploadImg",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php",upFlashExt:"swf",upMediaUrl:"upload.php",upMediaExt:"wmv,avi,wma,mp3,mid"});
+    }
+    function insertUpload(arrMsg){
+        console.log(arrMsg);
+        var i,msg;
+        for(i=0;i<arrMsg.length;i++){
+            msg=arrMsg[i];
+            $("#uploadList").append('<option value="'+msg.id+'">'+msg.localname+'</option>');
+        }
+    }
+    function submitForm(){$('#frmDemo').submit();}
+    function onsub(){
+        if(myform.content.value=='' || myform.title.value==''){return false;}
+        return true;
+    }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="text-center"><h3>正在 <strong class="text-info"><span class="glyphicon glyphicon-home">校园杂谈群</span></strong> 内聊天</h3></div>
+        <hr>
+        <label class="text-info">欢迎您，<span class="glyphicon glyphicon-user"><%=user.nickname%></span><small class="text-success">（在线）</small></label>
+        <div class="pull-right btn-group-vertical">  
+            <button type="button" class="btn btn-default dropdown-toggle"   
+                data-toggle="dropdown">  
+                菜单
+                <span class="caret"></span>  
+            </button>  
+            <ul class="dropdown-menu">  
+                <li><a href="#" data-toggle="modal" data-target="#msgModal">聊天记录</a></li>  
+                <li><a href="/user/addfriend">添加好友</a></li>  
+                <li><a href="javascript:void(0);">添加群聊</a></li>  
+                <li><a href="/user/editName">修改昵称</a></li>
+                <li><a href="/user/editPwd">修改密码</a></li>
+                <li class="divider"></li>
+                <li><a href="/user/logout">退出</a></li>
+            </ul>
+        </div>
+        <hr>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="text-center">您正在 <strong class="text-info"><span class="glyphicon glyphicon-user">校园杂谈群</span></strong> 内聊天</div>
+            </div>
+            <div id="showmsg" class="panel-body">
+                <!--<label class="label-info">你说：</label>
+                <p class="bg-info" style="border-radius:3px;">Nice to meet you!</p>
+                <label class="label-danger"><span class="glyphicon glyphicon-user">小凯说：</label>
+                <p class="bg-danger" style="border-radius:3px;">Nice to meet you,too!</p>-->
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+        <div class="text-center inchat">
+            <form name="myform" method="post">
+                <textarea id="content" name="content" class="form-control" rows="5"></textarea>
+                <br><br>
+                <!--<input type="submit" class="btn btn-success" value="发送消息">-->
+                <button id="btnSend" type="button" class="btn btn-success">发送消息</button>
+            </form>
+        </div>
+    </div>
+    <div id="msgModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="btn">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">聊天记录</h4>
+                </div>
+                <div class="modal-body" id="msgContent">asd</div>
+                <div class="modal-footer">
+                    <button type="button" id="btnFocus" class="btn btn-default" data-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#btnFocus').focus();
+        })
+    </script>
+    <script>
+    var ws = new WebSocket("ws://127.0.0.1:9091/");
+    ws.onopen = function () {
+        console.log("Opened");
+    };
+
+    ws.onmessage = function (evt) {
+        var data = evt.data;
+        // console.log('receive message:', data);
+        var dataObj = JSON.parse(data);
+        // console.log('msg:',dataObj.msg);
+        var nickname = '<%=user.nickname%>';
+        // console.log('nickname:',nickname);
+     
+        var output = [];
+        output.push('<label class="label-info">'+dataObj.from_nickname+'说：</label>');
+        output.push('<p class="bg-danger" style="border-radius:3px;">'+dataObj.msg+'</p>');
+        var showmsgStr = output.join('');
+        $('#showmsg').append(showmsgStr);
+        $('#msgContent').html($('#showmsg').html());
+    };
+
+    ws.onclose = function () {
+        console.log("Server Closed");
+    };
+
+    ws.onerror = function (err) {
+        alert("ws error: " + err);
+    };
+</script>
+<script>
+$(function(){
+    $('#msgContent').html($('#showmsg').html());
+    $('#btnSend').on('click',function(){
+        var content = $('#content').val();
+        // console.log('content:',content);
+        if(onsub()){
+            $.ajax({
+                url:'/chat/group',
+                type:'post',
+                dataType:'json',
+                data:{
+                    "content":content
+                },
+                success:function(data){
+                    var content = data.content;
+                    if(content){
+                        // console.log('content:',content);
+                        var output = [];
+                        output.push('<label class="label-info">你说：</label>');
+                        output.push('<p class="bg-info" style="border-radius:3px;">'+content+'</p>');
+                        var showmsgStr = output.join('');
+                        // console.log('showmsgStr:',showmsgStr);
+                        $('#showmsg').append(showmsgStr);
+                        $('#msgContent').html($('#showmsg').html());
+                        // console.log(Date.now());
+                        var sendMsg = {
+                            "msg":content,
+                            "from_nickname":"<%=user.nickname%>",
+                            "date":Date.now()
+                        };
+                        ws.send(JSON.stringify(sendMsg));
+                    }
+                },
+                error:function(xhr,status,err){
+                    console.log('请求出现异常，status:',status);
+                    console.log('err:',err)
+                }
+            });
+        }
+    });
+});
+</script>
+ 
+</body>
+</html>
