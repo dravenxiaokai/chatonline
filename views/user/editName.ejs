@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>修改昵称</title>
+    <%- include ../common/head%>
+</head>
+<body>
+<div class="container">
+    <div class="text-center"><h2>聊天室系统</h2></div>
+    <hr>
+    <h3><%=title%></h3>
+    <form id="updateForm" name="updateForm" action="/user/updateName" method="post" class="center-block" >
+        <div class="form-group">
+            <label for="inputNickname">当前昵称:</label>
+            <input type="text" name="nickname" class="form-control" id="inputNickname" value="<%=nickname%>" placeholder="昵称/用户名" disabled>
+        </div>
+        <div class="form-group">
+            <label for="newName">新昵称:</label>
+            <input type="text" name="newName" class="form-control" id="newName" placeholder="昵称/用户名">
+        </div>
+        <div class="center-block">
+            <button id="btnUpdatename" type="button" class="btn btn-info">修改密码</button>
+            <button type="reset" class="btn btn-info">清空</button>
+        </div>
+    </form>
+</div>
+<%- include ../common/foot%>
+<script>
+    $(function () {
+        // $("#applyAlert").alert('close');
+        $("#updateForm").bootstrapValidator({  
+            live: 'disabled',//验证时机，enabled是内容有变化就验证（默认），disabled和submitted是提交再验证  
+            excluded: [':disabled', ':hidden', ':not(:visible)'],//排除无需验证的控件，比如被禁用的或者被隐藏的  
+            submitButtons: '#btnUpdatename',//指定提交按钮，如果验证失败则变成disabled，但我没试成功，反而加了这句话非submit按钮也会提交到action指定页面  
+            message: '通用的验证失败消息',//好像从来没出现过  
+            feedbackIcons: {//根据验证结果显示的各种图标  
+                valid: 'glyphicon glyphicon-ok',  
+                invalid: 'glyphicon glyphicon-remove',  
+                validating: 'glyphicon glyphicon-refresh'  
+            },  
+            fields: {  
+                newName:{
+                    validators: {
+                        notEmpty: {//检测非空,radio也可用  
+                            message: '请设置新昵称'  
+                        },
+                        stringLength: {//检测长度  
+                            min: 2,  
+                            max: 30,  
+                            message: '长度必须在2-30之间'  
+                        }
+                    }
+                }
+            }
+        });  
+        $("#btnUpdatename").click(function () {//非submit按钮点击后进行验证，如果是submit则无需此句直接验证  
+            $("#updateForm").bootstrapValidator('validate');//提交验证  
+            if ($("#updateForm").data('bootstrapValidator').isValid()) {//获取验证结果，如果成功，执行下面代码  
+                // alert("yes");//验证成功后的操作，如ajax
+                $("#updateForm").submit();
+            }  
+        });  
+    });  
+</script>
+</body>
+</html>
