@@ -5,8 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>聊天列表</title>
+    <%- include ../common/head%>
+    <style>
+        a:hover{text-decoration:none;}
+    </style>
 </head>
 <body>
-    <%=email%>
+    <div class="container">
+        <div class="text-center"><h2>聊天室系统</h2></div>
+        <hr>
+        <label class="text-info">欢迎您，<span class="glyphicon glyphicon-user"><%=nickname%></span><small class="text-success">（在线）</small></label>
+        <div class="pull-right btn-group-vertical">  
+            <button type="button" class="btn btn-default dropdown-toggle"   
+                data-toggle="dropdown">  
+                菜单
+                <span class="caret"></span>  
+            </button>  
+            <ul class="dropdown-menu"> 
+                <li><a href="/user/addfriend">添加好友</a></li>  
+                <li><a href="javascript:void(0);">添加群聊</a></li>  
+                <li><a href="/user/editName">修改昵称</a></li>
+                <li><a href="/user/editPwd">修改密码</a></li>
+                <li class="divider"></li>
+                <li><a href="/user/logout">退出</a></li>
+            </ul>
+        </div>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <th>
+                        <tr>
+                            <td class="text-center text-info"><strong>好友列表</strong></td>
+                        </tr>
+                    </th>
+                </thead>
+                <tbody>
+                    <%users.forEach(function(item){%>
+                        <%if(item.nickname!=nickname){%>
+                        <tr>
+                            <td class="text-center text-primary"><a href="/chat/show/<%=item.nickname%>" class="" ><span class="glyphicon glyphicon-user"></span>&nbsp;<%=item.nickname%></a></td>
+                        </tr> 
+                        <%}%>   
+                    <%});%>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <table class="table table-striped table-hover table-bordered">
+            <thead>
+                <th>
+                    <tr>
+                        <td class="text-center text-info"><strong>群聊列表</strong></td>
+                    </tr>
+                </th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center text-primary"><a href="/chat/group"><span class="glyphicon glyphicon-home"></span>&nbsp;校园杂谈群</a></td>
+                </tr>    
+            </tbody>
+        </table>
+    </div>
+    <%- include ../common/foot%>
+    
 </body>
 </html>
