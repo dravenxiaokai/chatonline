@@ -1,2 +1,15 @@
-# 在线聊天系统
+# 基于HTML5的聊天室系统
+## 毕业设计
+##### [我的简书主页](https://www.jianshu.com/u/9be5d5cd3763)
 ## 初始化项目
+## 准备静态资源
+## MVC结构分层
+## 配置路由
+## 封装Schema层
+## 封装Model层
+## 编写Controller
+## 富文本编辑器Xheditor
+## Websocket
+## Mongoose
+## Bootstrap
+## EJS模板引擎编写页面
